@@ -1,0 +1,26 @@
+name: Deploy Static Website to Azure Web App - stefanoscloud
+
+on:
+  push:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # Πιο γρήγορο και ελαφρύ περιβάλλον Linux
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'stefanoscloud'
+          slot-name: 'Production'
+          # Αν τα αρχεία σας (.html) είναι στον αρχικό φάκελο, αφήστε το "."
+          # Αν είναι σε υποφάκελο (π.χ. public), αλλάξτε το σε ./public
+          package: .
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
